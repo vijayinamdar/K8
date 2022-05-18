@@ -1,0 +1,20 @@
+[root@ip-172-31-30-115 04-controllers]# vi cronjob.yaml
+[root@ip-172-31-30-115 04-controllers]# kubectl apply -f cronjob.yaml
+cronjob.batch/batch-job-every-fifteen-minutes created
+
+>>
+[root@ip-172-31-30-115 04-controllers]# kubectl get cronjob batch-job-every-fifteen-minutes
+NAME                              SCHEDULE             SUSPEND   ACTIVE   LAST SCHEDULE   AGE
+batch-job-every-fifteen-minutes   0,15,30,45 * * * *   False     0        <none>          2m53s
+
+>>
+differences
+cronjob automatically runs on specified time and period (can schedule a perticular task)
+
+>>
+[root@ip-172-31-30-115 04-controllers]# kubectl patch cronjobs batch-job-every-fifteen-minutes -p '{"spec" : {"suspend" : true }}'
+cronjob.batch/batch-job-every-fifteen-minutes patched
+
+[root@ip-172-31-30-115 04-controllers]# kubectl get cronjob
+NAME                              SCHEDULE             SUSPEND   ACTIVE   LAST SCHEDULE   AGE
+batch-job-every-fifteen-minutes   0,15,30,45 * * * *   True      0        2m16s           9m29s
