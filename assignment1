@@ -1,0 +1,87 @@
+kubia-rc.yaml has 
+kind: ReplicationController
+metadata:
+  name: kubia2
+  and under app it has 
+    ports:
+        - containerPort: 8080
+		
+
+
+[root@ip-172-31-30-115 05-services]# kubectl apply -f kubia-replicaset.yaml
+replicaset.apps/kubia created
+[root@ip-172-31-30-115 05-services]# kubectl get pods
+NAME                     READY   STATUS              RESTARTS   AGE
+kubia-79b84b44f4-jvpnd   1/1     Running             0          16m
+kubia-79b84b44f4-k7qtk   1/1     Running             0          18m
+kubia-79b84b44f4-msgzj   1/1     Running             0          16m
+kubia-k5smn              0/1     ContainerCreating   0          8s
+kubia-manual2            2/2     Running             0          5d19h
+kubia-px895              1/1     Running             0          8s
+kubia-tgl9h              0/1     ContainerCreating   0          8s
+kubia-v1-r4mjx           1/1     Running             0          18m
+kubia-v1-tl68h           1/1     Running             0          18m
+kubia-v1-wkpnn           1/1     Running             0          18m
+
+
+		
+		>>>>
+[root@ip-172-31-30-115 05-services]# kubectl get pods --show-labels
+NAME                     READY   STATUS    RESTARTS   AGE     LABELS
+kubia-79b84b44f4-jvpnd   1/1     Running   0          23m     app=kubia,pod-template-hash=79b84b44f4
+kubia-79b84b44f4-k7qtk   1/1     Running   0          25m     app=kubia,pod-template-hash=79b84b44f4
+kubia-79b84b44f4-msgzj   1/1     Running   0          24m     app=kubia,pod-template-hash=79b84b44f4
+
+>>>>>
+[root@ip-172-31-30-115 05-services]# kubectl apply -f kubia-svc.yaml
+service/kubia2 created
+
+>>>>>
+[root@ip-172-31-30-115 05-services]# curl 10.99.10.99
+This is v1 running in pod kubia-v1-wkpnn
+[root@ip-172-31-30-115 05-services]# curl 10.99.10.99:80
+This is v3 running in pod kubia-79b84b44f4-jvpnd
+[root@ip-172-31-30-115 05-services]# curl 10.99.10.99:80
+You've hit kubia-px895
+[root@ip-172-31-30-115 05-services]# curl 10.99.10.99:80
+This is v1 running in pod kubia-v1-wkpnn
+[root@ip-172-31-30-115 05-services]# curl 10.99.10.99:80
+This is v3 running in pod kubia-79b84b44f4-k7qtk
+
+>>>>
+[root@ip-172-31-30-115 05-services]# kubectl label po kubia-tgl9h  app=mavenir --overwrite
+pod/kubia-tgl9h labeled
+
+>>>
+[root@ip-172-31-30-115 05-services]# kubectl label po kubia-tgl9h  app=mavenir --overwrite
+pod/kubia-tgl9h labeled
+[root@ip-172-31-30-115 05-services]# kubectl get pods --show-labels
+NAME                     READY   STATUS    RESTARTS   AGE     LABELS
+kubia-4mm24              1/1     Running   0          28s     app=kubia
+
+kubia-tgl9h              1/1     Running   0          11m     app=mavenir
+
+[root@ip-172-31-30-115 05-services]# curl 10.99.10.99:80
+This is v3 running in pod kubia-79b84b44f4-jvpnd
+[root@ip-172-31-30-115 05-services]# curl 10.99.10.99:80
+This is v3 running in pod kubia-79b84b44f4-jvpnd
+[root@ip-172-31-30-115 05-services]# curl 10.99.10.99:80
+This is v1 running in pod kubia-v1-tl68h
+[root@ip-172-31-30-115 05-services]# curl 10.99.10.99:80
+This is v1 running in pod kubia-v1-tl68h
+[root@ip-172-31-30-115 05-services]# curl 10.99.10.99:80
+This is v1 running in pod kubia-v1-tl68h
+[root@ip-172-31-30-115 05-services]# curl 10.99.10.99:80
+This is v1 running in pod kubia-v1-r4mjx
+[root@ip-172-31-30-115 05-services]# curl 10.99.10.99:80
+You've hit kubia-px895
+[root@ip-172-31-30-115 05-services]# curl 10.99.10.99:80
+This is v3 running in pod kubia-79b84b44f4-msgzj
+[root@ip-172-31-30-115 05-services]# curl 10.99.10.99:80
+This is v3 running in pod kubia-79b84b44f4-k7qtk
+[root@ip-172-31-30-115 05-services]# curl 10.99.10.99:80
+You've hit kubia-px895
+[root@ip-172-31-30-115 05-services]# curl 10.99.10.99:80
+This is v3 running in pod kubia-79b84b44f4-msgzj
+
+
